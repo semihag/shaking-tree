@@ -1,6 +1,6 @@
 <template>
   <div>
-    <img :class="{ drop: dropped }" src="../assets/fresh-apple.svg" />
+    <img src="../assets/images/apple.svg" />
   </div>
 </template>
 
@@ -11,14 +11,5 @@ img {
   width: 40px;
   height: 30px;
 }
-.apple {
-  animation: drop ;
-  animation-duration: 2s;
 
-}
-@keyframes drop {
-  to {
-    top: 720px;
-  }
-}
 </style>

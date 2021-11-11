@@ -1,13 +1,18 @@
 <template>
   <div>
-    <button :disabled="animated" @click="shakeTree">Shake Tree</button>
-    <Tree :class="{ shake: animated }"> </Tree>
-    <AppleBasket></AppleBasket>
-    <p>{{ this.$store.state }}</p>
+    <button
+      :disabled="shaking || this.$store.state.onTree.length == 0"
+      @click="shakeTree"
+    >
+      Shake Tree
+    </button>
+    <Tree :class="{ shake: shaking }" />
+    <AppleBasket />
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import Tree from "./components/Tree.vue";
 import AppleBasket from "./components/AppleBasket.vue";
 
@@ -19,53 +24,64 @@ export default {
   },
   data() {
     return {
-      animated: false,
-      dropped: false,
+      shaking: false,
+      n: 2,
     };
+  },
+  computed: {
+    ...mapGetters({
+      onTree: "GET_APPLES_ON_TREE",
+    }),
   },
   methods: {
     shakeTree() {
-      this.animated = true;
-      setTimeout(() => {
-        this.animated = false;
-      }, 3000);
-      this.$store.commit("DROP_APPLE");
+      if (this.$store.state.onTree.length == 0) {
+        return alert("No Apples Left!");
+      } else {
+        const self = this;
+        this.shaking = true;
+        setTimeout(() => {
+          self.shaking = false;
+          for (let i = 1; i <= self.n; i++) {
+            setTimeout(() => {
+              self.$store.commit("DROP_APPLE");
+            }, i * 500); //elmalar farklı zamanda düşsün
+          }
+          self.n = self.n == 3 ? 2 : 3; //her sallantıdan sonra sırasıyla 2 veya 3 elma düşmesi sağlanır
+        }, 3000);
+        //3 saniye ağacın sallanma süresi.
+      }
     },
-    dropApples() {},
-    createAppleOnTrees() {},
   },
   created() {
     this.$store.commit("SHUFFLE_APPLES_ON_TREE");
+    //Elmalar her zaman farklı sırada düşmesi için sıralı diziyi karıştırdım.
   },
 };
 </script>
 
-<style>
+<style lang="scss">
+$general-font: "MedievalSharp", cursive;
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: $general-font;
   text-align: center;
-  color: #2c3e50;
   margin-top: 60px;
-}
-button {
-  position: absolute;
-  top: 700px;
-  left: 5%;
-  background-color: green;
-  color: aliceblue;
-  border-radius: 5px;
-  font-family: fantasy;
-  font-size: 26px;
-  cursor: pointer;
 
-}
-button:disabled{
-  background-color: gray;
-}
-p {
-  position: absolute;
-  top: 70%;
+  button {
+    position: absolute;
+    top: 700px;
+    left: 5%;
+    background-color: green;
+    color: aliceblue;
+    border-radius: 5px;
+    font-family: $general-font;
+    font-size: 26px;
+    cursor: pointer;
+
+    &:disabled {
+      background-color: gray;
+      cursor: not-allowed;
+    }
+  }
 }
 </style>
