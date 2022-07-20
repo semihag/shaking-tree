@@ -2,32 +2,51 @@
   <div id="tree">
     <img src="../assets/images/tree.svg" alt="" />
     <Apple
-      v-for="i in 12"
+      v-for="i in TOTAL_APPLE_COUNT"
+      :key="i"
       :style="{
-        display: APPLES_IN_BASKET.some((x) => x == i) ? 'none' : 'block',
+        top : topPositions[i-1] + 'px',
+        left: leftPositions[i-1]+ 'px',
+        display: APPLES_IN_BASKET.some((x) => x == i) ? 'none' : '',
       }"
       :class="[
-        'apple',
-        'a' + i,
-        { 'dropped-apple': DROPPED_APPLES.some((x) => x == i) },
+        DROPPED_APPLES.some((x) => x === i) ? 'dropped-apple' : '',
       ]"
-      :key="i"
-    >
-    </Apple>
+    />
+
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+import Apple from "./Apple.vue";
 
 export default {
+  data() {
+    return {
+      topPositions: [],
+      leftPositions: [],
+    };
+  },
   computed: {
-    ...mapGetters(["APPLES_ON_TREE", "DROPPED_APPLES", "APPLES_IN_BASKET"]),
+    ...mapGetters([
+      "TOTAL_APPLE_COUNT",
+      "APPLES_ON_TREE",
+      "DROPPED_APPLES",
+      "APPLES_IN_BASKET",
+    ]),
+  },
+  components: { Apple },
+  created() {
+    for (let i=0;i<this.TOTAL_APPLE_COUNT;i++) {
+      this.topPositions.push(150 + Math.random() * 100);
+      this.leftPositions.push(50 + Math.random() * 550);
+    }
   },
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import "../assets/css/apple.scss";
 #tree {
   width: 700px;

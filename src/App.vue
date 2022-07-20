@@ -54,7 +54,7 @@ export default {
     },
   },
   created() {
-    this.$store.commit("SHUFFLE_APPLES_ON_TREE");
+    this.$store.commit("CREATE_APPLES_ON_TREE");
     //Elmalar her zaman farklı sırada düşmesi için sıralı diziyi karıştırdım.
   },
 };

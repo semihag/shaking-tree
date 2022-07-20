@@ -2,7 +2,7 @@
   <div id="appleBasket">
     <img src="../assets/images/basket.svg" alt="" />
     <Apple
-      v-for="(i, index) in this.$store.state.inBasket"
+      v-for="(i, index) in APPLES_IN_BASKET"
       class="apple"
       :class="'a' + (index + 1)"
       :key="index"
@@ -10,6 +10,15 @@
     <!-- elmalar düşme sırasına göre konumlanan yerlerine gider. -->
   </div>
 </template>
+
+<script>
+import { mapGetters } from "vuex";
+export default {
+  computed: {
+    ...mapGetters(["APPLES_IN_BASKET"]),
+  },
+};
+</script>
 
 <style scoped>
 #appleBasket {
